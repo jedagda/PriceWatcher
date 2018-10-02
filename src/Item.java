@@ -1,3 +1,5 @@
+import java.util.Date;
+
 /*
  * The class Item stores the name, url address, price, change in percentage, date added
  */
@@ -5,10 +7,10 @@ public class Item {
 
             private String name;
             private String url;
-            private float price;
-            private final float initialPrice = price;
-            private float change;
-            private String dateAdded;
+            private double price;
+            private final double initialPrice = price;
+            private double change;
+            private Date dateAdded;
 
             /**
              * Constructor for Item with no arguments
@@ -28,7 +30,7 @@ public class Item {
              */
 
 
-            public Item(String name, String url, float price, float change, String dateAdded){
+            public Item(String name, String url, double price, double change, Date dateAdded){
                 this.name = name;
                 this.url = url;
                 this.price = price;
@@ -44,8 +46,6 @@ public class Item {
                 this.change= ((price - initialPrice)/initialPrice)*100;
             }
 
-
-
             public String getName(){
                 return name;
             }
@@ -54,17 +54,28 @@ public class Item {
                 return url;
             }
 
-            public  float getPrice(){
+            public double getPrice(){
                 return price;
             }
 
-            public float getChange(){
+            public double getChange(){
                 return change;
             }
 
-            public String getDateAdded(){
+            public Date getDateAdded(){
                 return dateAdded;
             }
+
+            public String getPriceToString(){
+                return Double.toString(getPrice());
+            }
+
+            public String getPriceChangeToString(){
+                return Double.toString(getChange());
+            }
+
+
+
 
 
 }

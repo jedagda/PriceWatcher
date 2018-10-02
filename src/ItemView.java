@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ItemView extends JPanel {
-    
+
 	/** Interface to notify a click on the view page icon. */
 	public interface ClickListener {
 		
@@ -27,6 +27,8 @@ public class ItemView extends JPanel {
         
 	/** View-page clicking listener. */
     private ClickListener listener;
+
+    private Item item;
     
     /** Create a new instance. */
     public ItemView() {
@@ -44,21 +46,27 @@ public class ItemView extends JPanel {
     public void setClickListener(ClickListener listener) {
     	this.listener = listener;
     }
+
+    public void setItem(Item item){
+        this.item = item;
+    }
     
     /** Overridden here to display the details of the item. */
     @Override
 	public void paint(Graphics g) {
         super.paint(g); 
         //Dimension dim = getSize();
-        
-        //--
-        //-- WRITE YOUR CODE HERE!
-        //--
         int x = 20, y = 30;
-        // g.drawImage(getImage("view.png"), x, y)
-        g.drawString("[View]", x, y);
+        //g.drawImage(getImage("view.png"), x, y);
+        //g.drawString(getName(), x, y);
+       // y += 20;
+        g.drawString(item.getName(), x, y);
         y += 20;
-        g.drawString("Hi, I am your item!", x, y);
+        g.drawString(item.getURL(), x, y);
+        y += 20;
+        g.drawString(item.getPriceToString(), x, y);
+        y += 20;
+        g.drawString(item.getPriceChangeToString(), x, y);
 
     }
     

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,25 +16,35 @@ import javax.swing.SwingUtilities;
 /**
 * A dialog for tracking the price of an item.
 *
-* @author Yoonsik Cheon
+* @author Yoonsik Cheon, Joshua Dagda
 */
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
     /** Default dimension of the dialog. */
-    private final static Dimension DEFAULT_SIZE = new Dimension(400, 300);
-      
+    private final static Dimension DEFAULT_SIZE = new Dimension(1500, 1300);
+
+
     /** Special panel to display the watched item. */
     private ItemView itemView;
       
     /** Message bar to display various messages. */
     private JLabel msgBar = new JLabel(" ");
 
+    private Item item;
     /** Create a new dialog. */
     public Main() {
-    	this(DEFAULT_SIZE);
+        this(DEFAULT_SIZE);
+        String bookName="Ghost In the Wires";
+        String bookURL="https://www.amazon.com/Ghost-Wires-Adventures-Worlds-Wanted/dp/0316037729/";
+        double bookPrice = 17.00f;
+        double priceChange = 0.00f;
+        Date bookAdded = new Date (2012,04,24);
+        Item item = new Item(bookName,bookURL,bookPrice,priceChange,bookAdded);
+        itemView.setItem(item);
+
     }
-    
+
     /** Create a new dialog of the given screen dimension. */
     public Main(Dimension dim) {
         super("Price Watcher");
@@ -51,10 +62,9 @@ public class Main extends JFrame {
      * Find the current price of the watched item and display it 
      * along with a percentage price change. */
     private void refreshButtonClicked(ActionEvent event) {
-    	//--
-    	//-- WRITE YOUR CODE HERE!
-    	//--
-    	showMessage("Refresh clicked!");
+        PriceCheck priceCheck = new PriceCheck();
+        String newPrice = Double.toString(priceCheck.randomPrice());
+    	showMessage(newPrice);
     }
     
     /** Callback to be invoked when the view-page icon is clicked.
@@ -113,12 +123,6 @@ public class Main extends JFrame {
     public static void main(String[] args) {
         new Main();
     }
-        String bookName="Ghost In the Wires";
-        String bookURL="https://www.amazon.com/Ghost-Wires-Adventures-Worlds-Wanted/dp/0316037729/";
-        float bookPrice = 17.00f;
-        float priceChange = 0.00f;
-        String bookAdded = "04/24/2012";
 
-        Item book = new Item(bookName,bookURL,bookPrice,priceChange,bookAdded);
-        //action(book);
+
 }
