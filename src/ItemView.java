@@ -1,9 +1,7 @@
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
@@ -15,73 +13,85 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public class ItemView extends JPanel {
 
-	/** Interface to notify a click on the view page icon. */
-	public interface ClickListener {
-		
-		/** Callback to be invoked when the view page icon is clicked. */
-		void clicked();
-	}
-	
-	/** Directory for image files: src/image in Eclipse. */
-	private final static String IMAGE_DIR = "/image/";
-        
-	/** View-page clicking listener. */
+
+    /** Interface to notify a click on the view page icon. */
+    public interface ClickListener {
+        /** Callback to be invoked when the view page icon is clicked. */
+        void clicked();
+    }
+
+    /** Directory for image files: src/image in Eclipse. */
+    private final static String IMAGE_DIR = "/image/";
+
+    /** View-page clicking listener. */
     private ClickListener listener;
 
     private Item item;
-    
+
     /** Create a new instance. */
     public ItemView() {
         setBackground(Color.WHITE);
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-            	if (isViewPageClicked(e.getX(), e.getY()) && listener != null) {
-            		listener.clicked();
-            	}
+                if (isViewPageClicked(e.getX(), e.getY()) && listener != null) {
+                    listener.clicked();
+                }
             }
         });
     }
-        
+
     /** Set the view-page click listener. */
     public void setClickListener(ClickListener listener) {
-    	this.listener = listener;
+        this.listener = listener;
     }
 
+    /** Create a relationship between ItemView and Item class*/
     public void setItem(Item item){
         this.item = item;
     }
-    
+
+
     /** Overridden here to display the details of the item. */
     @Override
-	public void paint(Graphics g) {
-        super.paint(g); 
+    public void paint(Graphics g) {
+
+        super.paint(g);
         //Dimension dim = getSize();
         int x = 20, y = 30;
-        //g.drawImage(getImage("view.png"), x, y);
-        //g.drawString(getName(), x, y);
-       // y += 20;
-        g.drawString(item.getName(), x, y);
+        g.drawImage(getImage("view.png"), 0, 0,null);
+
+        //y += 100;
+        x+=300;
+        g.drawString("Name:", x , y);
+        g.drawString(item.getName(), x+75, y);
         y += 20;
-        g.drawString(item.getURL(), x, y);
+        g.drawString("URL:", x , y);
+        g.drawString(item.getURL(), x+75, y);
         y += 20;
-        g.drawString(item.getPriceToString(), x, y);
+        g.drawString("Price:", x , y);
+        g.drawString(Double.toString(item.getPrice()), x+75, y);
         y += 20;
-        g.drawString(item.getPriceChangeToString(), x, y);
+        g.drawString("Change:", x , y);
+        g.drawString(item.getPriceChangeToString(), x+75, y);
+        y += 20;
+        g.drawString("Added:", x , y);
+        g.drawString(item.getDateAdded() + "    "+ "(" +item.getInitialPrice()+ ")", x+75, y);
+
 
     }
-    
+
     /** Return true if the given screen coordinate is inside the viewPage icon. */
     private boolean isViewPageClicked(int x, int y) {
-    	//--
-    	//-- WRITE YOUR CODE HERE
-    	//--
-    	return new Rectangle(20, 20, 30, 20).contains(x,  y);
+        //--
+        //-- WRITE YOUR CODE HERE
+        //--
+        return new Rectangle(20, 20, 30, 20).contains(x,  y);
     }
-        
+
     /** Return the image stored in the given file. */
     public Image getImage(String file) {
         try {
-        	URL url = new URL(getClass().getResource(IMAGE_DIR), file);
+            URL url = new URL(getClass().getResource(IMAGE_DIR), file);
             return ImageIO.read(url);
         } catch (IOException e) {
             e.printStackTrace();

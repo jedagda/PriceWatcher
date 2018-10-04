@@ -1,45 +1,48 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Date;
-
+import java.net.URI;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import java.io.*;
+import java.net.URL;
+import javax.sound.sampled.*;
+import javax.swing.*;
 
 /**
-* A dialog for tracking the price of an item.
-*
-* @author Yoonsik Cheon, Joshua Dagda
-*/
+ * A dialog for tracking the price of an item.
+ *
+ * @author Yoonsik Cheon, Joshua Dagda
+ */
 @SuppressWarnings("serial")
 public class Main extends JFrame {
 
     /** Default dimension of the dialog. */
-    private final static Dimension DEFAULT_SIZE = new Dimension(1500, 1300);
+    private final static Dimension DEFAULT_SIZE = new Dimension(800, 600);
 
-
+    private SoundFX wololo = new SoundFX();
     /** Special panel to display the watched item. */
     private ItemView itemView;
-      
+
+    /** Creates an instance of PriceCheck*/
+    private PriceCrawler priceCrawler =new PriceCrawler();
+
     /** Message bar to display various messages. */
     private JLabel msgBar = new JLabel(" ");
 
-    private Item item;
+    /** Create an instance of Item */
+    private Item item = new Item();
     /** Create a new dialog. */
     public Main() {
         this(DEFAULT_SIZE);
         String bookName="Ghost In the Wires";
         String bookURL="https://www.amazon.com/Ghost-Wires-Adventures-Worlds-Wanted/dp/0316037729/";
-        double bookPrice = 17.00f;
-        double priceChange = 0.00f;
-        Date bookAdded = new Date (2012,04,24);
+        double bookPrice = 17.00;
+        double priceChange = 0.00;
+        String bookAdded = "4/24/12";
         Item item = new Item(bookName,bookURL,bookPrice,priceChange,bookAdded);
         itemView.setItem(item);
 
@@ -49,7 +52,7 @@ public class Main extends JFrame {
     public Main(Dimension dim) {
         super("Price Watcher");
         setSize(dim);
-        
+
         configureUI();
         //setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -57,36 +60,59 @@ public class Main extends JFrame {
         //setResizable(false);
         showMessage("Welcome!");
     }
-  
-    /** Callback to be invoked when the refresh button is clicked. 
-     * Find the current price of the watched item and display it 
+
+    /** Callback to be invoked when the refresh button is clicked.
+     * Find the current price of the watched item and display it
      * along with a percentage price change. */
     private void refreshButtonClicked(ActionEvent event) {
-        PriceCheck priceCheck = new PriceCheck();
-        String newPrice = Double.toString(priceCheck.randomPrice());
-    	showMessage(newPrice);
+
+        PriceCrawler priceCrawler = new PriceCrawler();
+        item.setPrice(priceCrawler.randomPrice());
+        showMessage(Double.toString(item.getPrice()));
+        itemView.repaint();
+
+        if(item.getInitialPrice() > item.getPrice()) {
+
+            // Open an audio input stream.
+    //        URL url = this.getClass().getClassLoader().getResource("/image/wololo.wav");
+      //      AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+            // Get a sound clip resource.
+     //       Clip clip = AudioSystem.getClip();
+            // Open audio clip and load samples from the audio input stream.
+     //       clip.open(audioIn);
+     //       clip.start();
+        }else{
+            //play audio
+        }
+
+
     }
-    
+
     /** Callback to be invoked when the view-page icon is clicked.
      * Launch a (default) web browser by supplying the URL of
      * the item. */
-    private void viewPageClicked() {    	
-    	//--
-    	//-- WRITE YOUR CODE HERE!
-    	//--
-    	showMessage("View clicked!");
+    private void viewPageClicked() {
+        try {
+            Desktop desktop = java.awt.Desktop.getDesktop();
+            URI oURL = new URI(item.getURL());
+            desktop.browse(oURL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        showMessage("View clicked!");
     }
-        
+
     /** Configure UI. */
     private void configureUI() {
         setLayout(new BorderLayout());
         JPanel control = makeControlPanel();
-        control.setBorder(BorderFactory.createEmptyBorder(10,16,0,16)); 
+        control.setBorder(BorderFactory.createEmptyBorder(10,16,0,16));
         add(control, BorderLayout.NORTH);
         JPanel board = new JPanel();
         board.setBorder(BorderFactory.createCompoundBorder(
-        		BorderFactory.createEmptyBorder(10,16,0,16),
-        		BorderFactory.createLineBorder(Color.GRAY)));
+                BorderFactory.createEmptyBorder(10,16,0,16),
+                BorderFactory.createLineBorder(Color.GRAY)));
         board.setLayout(new GridLayout(1,1));
         itemView = new ItemView();
         itemView.setClickListener(this::viewPageClicked);
@@ -95,12 +121,12 @@ public class Main extends JFrame {
         msgBar.setBorder(BorderFactory.createEmptyBorder(10,16,10,0));
         add(msgBar, BorderLayout.SOUTH);
     }
-      
+
     /** Create a control panel consisting of a refresh button. */
     private JPanel makeControlPanel() {
-    	JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-    	JButton refreshButton = new JButton("Refresh");
-    	refreshButton.setFocusPainted(false);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        JButton refreshButton = new JButton("Refresh");
+        refreshButton.setFocusPainted(false);
         refreshButton.addActionListener(this::refreshButtonClicked);
         panel.add(refreshButton);
         return panel;
@@ -110,16 +136,16 @@ public class Main extends JFrame {
     private void showMessage(String msg) {
         msgBar.setText(msg);
         new Thread(() -> {
-        	try {
-				Thread.sleep(3 * 1000); // 3 seconds
-			} catch (InterruptedException e) {
-			}
-        	if (msg.equals(msgBar.getText())) {
-        		SwingUtilities.invokeLater(() -> msgBar.setText(" "));
-        	}
+            try {
+                Thread.sleep(3 * 1000); // 3 seconds
+            } catch (InterruptedException e) {
+            }
+            if (msg.equals(msgBar.getText())) {
+                SwingUtilities.invokeLater(() -> msgBar.setText(" "));
+            }
         }).start();
     }
-    
+
     public static void main(String[] args) {
         new Main();
     }
