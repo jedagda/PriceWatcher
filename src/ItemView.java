@@ -56,28 +56,60 @@ public class ItemView extends JPanel {
     public void paint(Graphics g) {
 
         super.paint(g);
-        //Dimension dim = getSize();
         int x = 20, y = 30;
+        final int lineGap = 20;
+        //displays image of item
         g.drawImage(getImage("view.png"), 0, 0,null);
-
-        //y += 100;
+        //displays information of item
         x+=300;
-        g.drawString("Name:", x , y);
-        g.drawString(item.getName(), x+75, y);
-        y += 20;
-        g.drawString("URL:", x , y);
-        g.drawString(item.getURL(), x+75, y);
-        y += 20;
-        g.drawString("Price:", x , y);
-        g.drawString(Double.toString(item.getPrice()), x+75, y);
-        y += 20;
-        g.drawString("Change:", x , y);
-        g.drawString(item.getPriceChangeToString(), x+75, y);
-        y += 20;
+        paintName(g, x, y, "Name:", item.getName());
+        y += lineGap;
+        paintURL(g, x, y, "URL:", item.getURL());
+        y += lineGap;
+        paintPrice(g, x, y);
+        y += lineGap;
+        paintChange(g, x, y);
+        y += lineGap;
+        paintDate(g, x, y);
+
+    }
+
+    private void paintDate(Graphics g, int x, int y) {
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Serif",Font.BOLD,12));
         g.drawString("Added:", x , y);
-        g.drawString(item.getDateAdded() + "    "+ "(" +item.getInitialPrice()+ ")", x+75, y);
+        g.setFont(new Font("Sans-Serif",Font.PLAIN,12));
+        g.drawString(item.getDateAdded() + "    "+ "(" + "$"+item.getInitialPrice()+ ")", x+75, y);
+    }
 
+    private void paintChange(Graphics g, int x, int y) {
+        g.setFont(new Font("Serif",Font.BOLD,12));
+        g.drawString("Change:", x , y);
+        g.setFont(new Font("Sans-Serif",Font.PLAIN,12));
+        g.setColor(Color.BLUE);
+        g.drawString(item.getPriceChangeToString(), x+75, y);
+    }
 
+    private void paintPrice(Graphics g, int x, int y) {
+        g.setFont(new Font("Serif",Font.BOLD,12));
+        g.drawString("Price:", x , y);
+        g.setFont(new Font("Sans-Serif",Font.PLAIN,12));
+        String cP = "$" + String.format("");
+        g.drawString("$" + Double.toString(item.getPrice()), x+75, y);
+    }
+
+    private void paintName(Graphics g, int x, int y, String s, String name) {
+        g.setFont(new Font("Serif", Font.BOLD, 12));
+        g.drawString(s, x, y);
+        g.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+        g.drawString(name, x + 75, y);
+    }
+
+    private void paintURL(Graphics g, int x, int y, String s, String name) {
+        g.setFont(new Font("Serif", Font.BOLD, 12));
+        g.drawString(s, x, y);
+        g.setFont(new Font("Sans-Serif", Font.PLAIN, 12));
+        g.drawString(name, x + 75, y);
     }
 
     /** Return true if the given screen coordinate is inside the viewPage icon. */

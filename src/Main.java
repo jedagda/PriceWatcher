@@ -34,7 +34,7 @@ public class Main extends JFrame {
     private JLabel msgBar = new JLabel(" ");
 
     /** Create an instance of Item */
-    private Item item = new Item();
+    private Item item /*= new Item()*/;
     /** Create a new dialog. */
     public Main() {
         this(DEFAULT_SIZE);
@@ -43,7 +43,7 @@ public class Main extends JFrame {
         double bookPrice = 17.00;
         double priceChange = 0.00;
         String bookAdded = "4/24/12";
-        Item item = new Item(bookName,bookURL,bookPrice,priceChange,bookAdded);
+        item = new Item(bookName,bookURL,bookPrice,priceChange,bookAdded);
         itemView.setItem(item);
 
     }

@@ -43,12 +43,9 @@ public class Item {
 
     public void setPrice(double newPrice){
         this.price = newPrice;
+        this.change= ((this.price - this.initialPrice)/this.initialPrice)*100;
     }
 
-/*            public void setChange(){
-                this.change= ((this.price - this.initialPrice)/this.initialPrice)*100;
-            }
-            */
 
     public String getName(){
         return name;
